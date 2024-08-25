@@ -3,14 +3,14 @@ package com.demoqa;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.CapabilityType;
 
 import java.io.File;
 
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Condition.text;
 
 public class DemoqaTest {
 
@@ -18,12 +18,11 @@ public class DemoqaTest {
     public void setUp(){
         Configuration.browserSize = "1920x1080";
         Configuration.browserCapabilities.setCapability(CapabilityType.PAGE_LOAD_STRATEGY, "eager");
+        open("https://demoqa.com/automation-practice-form");
     }
 
     @Test
     public void fillInFormsTest(){
-        open("https://demoqa.com/automation-practice-form");
-
         // Fill in first name
         $("#firstName").setValue("Test");
 
@@ -49,7 +48,7 @@ public class DemoqaTest {
         $("#subjectsInput").setValue("Hindi").pressEnter();
 
         // Choose hobbies
-        $("[for=\"hobbies-checkbox-2\"]").click();
+        $("[for=\"hobbies-checkbox-1\"]").click();
         $("[for=\"hobbies-checkbox-2\"]").click();
         $("[for=\"hobbies-checkbox-3\"]").click();
 
@@ -79,5 +78,16 @@ public class DemoqaTest {
                         text("sky.png"),
                         text("Lenina st" + "Saint Petersburg"),
                         text("Haryana Karnal"));
+    }
+    @Test
+    public void negativeSubmitButtonTest(){
+        $("#submit").click();
+        $("#firstName").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+        $("#lastName").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+        $("#userNumber").shouldHave(cssValue("border-color", "rgb(220, 53, 69)"));
+        $("[for=\"hobbies-checkbox-1\"]").shouldHave(cssValue("color", "rgba(40, 167, 69, 1)"));
+        $("[for=\"hobbies-checkbox-2\"]").shouldHave(cssValue("color", "rgba(40, 167, 69, 1)"));
+        $("[for=\"hobbies-checkbox-3\"]").shouldHave(cssValue("color", "rgba(40, 167, 69, 1)"));
+        $(By.xpath("//*[@class='text-center' and text()='Practice Form']")).shouldHave(text("Practice Form"));
     }
 }
